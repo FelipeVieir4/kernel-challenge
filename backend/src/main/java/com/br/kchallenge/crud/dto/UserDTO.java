@@ -1,14 +1,14 @@
 package com.br.kchallenge.crud.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+
 public class UserDTO {
     private Long id;
     private String name;
