@@ -1,17 +1,19 @@
 package com.br.kchallenge.crud.service;
 
-import com.br.kchallenge.crud.model.User; // Importing the User model class
+import com.br.kchallenge.crud.model.User; 
+import java.util.List;
+import java.util.Optional;
 
 public interface IUserService {
-    User createUser(User user); // Method to create a new user
+    User createUser(User user); 
 
-    // User getUserById(Long id); // Method to retrieve a user by ID
+    User getUserById(Long id);
 
-    // List<User> getAllUsers(); // Method to retrieve all users
+    List<User> getAllUsers(); 
 
-    // User updateUser(Long id, User user); // Method to update an existing user
+    User updateUser(Long id, User user); 
 
-    // void deleteUser(Long id); // Method to delete a user by ID
+    void deleteUser(Long id); 
 
-    // Optional<User> User getUserByEmail(String email); // Method to retrieve a user by email
+    User findByEmail(String email);
 }

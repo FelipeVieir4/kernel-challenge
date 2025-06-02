@@ -1,22 +1,27 @@
 package com.br.kchallenge.crud.model;
 
-import jakarta.persistence.*; // Importing JPA annotations for entity mapping
-import lombok.Data; // Importing Lombok for automatic getter/setter generation
-import lombok.NoArgsConstructor; // Importing Lombok for no-args constructor generation
-import lombok.AllArgsConstructor; // Importing Lombok for all-args constructor generation
+import com.br.kchallenge.crud.enums.RolesEnum;
 
-@Entity // Indicates that this class is a JPA entity
-@Table(name = "users") // Specifies the table name in the database
-@Data // Lombok annotation to generate getters, setters, equals, hashCode, and
-      // toString methods
-@NoArgsConstructor // Lombok annotation to generate a no-argument constructor
-@AllArgsConstructor // Lombok annotation to generate a constructor with all fields
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
+
+@Entity
+@Table(name = "users")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
-    @Id // Marks this field as the primary key
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Specifies that the primary key is auto-generated
-    private Long id; // Unique identifier for the user
+    @Id
+    @Column(unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    
     @Column(nullable = false)
     private String name;
 
@@ -26,5 +31,17 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RolesEnum role = RolesEnum.USER; //
+
+    @Column(nullable = false)
+    private boolean isActive = true;
+
+    // public User orElse(Object object) {
+    //     if (object instanceof User user) {
+    //         return user;
+    //     }
+    //     return null;
+    // }
 }

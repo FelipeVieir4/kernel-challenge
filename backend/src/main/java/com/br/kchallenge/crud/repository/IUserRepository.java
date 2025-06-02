@@ -10,6 +10,8 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     // The first parameter is the entity type (User), and the second is the type of
     // the primary key (Long)
 
+    User findByEmail(String email); // Custom query method to find a user by email
+
 }
 
 /*
