@@ -1,6 +1,7 @@
 package com.br.kchallenge.crud.controller;
 
-import com.br.kchallenge.crud.dto.UserDTO;
+import com.br.kchallenge.crud.dto.UserCreationRequestDTO;
+import com.br.kchallenge.crud.dto.UserResponseDTO;
 import com.br.kchallenge.crud.enums.RolesEnum;
 import com.br.kchallenge.crud.model.User;
 import com.br.kchallenge.crud.service.IUserService;
@@ -29,71 +30,75 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@Validated @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserResponseDTO> createUser(
+            @Validated @RequestBody UserCreationRequestDTO userCreationRequestDTO) {
 
-        if (IUserService.findByEmail(userDTO.getEmail()) != null) {
+        if (IUserService.findByEmail(userCreationRequestDTO.getEmail()) != null) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
         User newUser = new User();
-        newUser.setName(userDTO.getName());
-        newUser.setEmail(userDTO.getEmail());
-        newUser.setPassword(userDTO.getPassword()); // tem que criptografar a senha antes de salvar
+        newUser.setName(userCreationRequestDTO.getName());
+        newUser.setEmail(userCreationRequestDTO.getEmail());
+        newUser.setPassword(userCreationRequestDTO.getPassword()); // tem que criptografar a senha antes de salvar
 
         User createdUser = IUserService.createUser(newUser);
 
-        UserDTO userToReturnDTO = toUserDTO(createdUser);
+        UserResponseDTO userResponseDTO = toUserResponseDTO(createdUser);
 
-        return new ResponseEntity<>(userToReturnDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(userResponseDTO, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> userDTOList = IUserService.getAllUsers().stream()
-                .map(this::toUserDTO)
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        List<UserResponseDTO> userResponseDTOList = IUserService.getAllUsers().stream()
+                .map(this::toUserResponseDTO)
                 .collect(Collectors.toList());
 
-        return new ResponseEntity<>(userDTOList, HttpStatus.OK);
+        return new ResponseEntity<>(userResponseDTOList, HttpStatus.OK);
 
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
         User user = IUserService.getUserById(id);
-        UserDTO userDTO = toUserDTO(user);
-        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        UserResponseDTO userResponseDTO = toUserResponseDTO(user);
+        return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @Validated @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id,
+            @Validated @RequestBody UserCreationRequestDTO userCreationRequestDTO) {
 
         User existingUser = IUserService.getUserById(id);
         if (existingUser == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        existingUser.setName(userDTO.getName());
-        existingUser.setEmail(userDTO.getEmail());
-        existingUser.setPassword(userDTO.getPassword()); // tem que criptografar a senha antes de salvar
+        existingUser.setName(userCreationRequestDTO.getName());
+        existingUser.setEmail(userCreationRequestDTO.getEmail());
+        existingUser.setPassword(userCreationRequestDTO.getPassword()); // tem que criptografar a senha antes de salvar
 
         User userUpdated = IUserService.updateUser(id, existingUser);
 
-        UserDTO userToReturnDTO = toUserDTO(userUpdated);
-        return new ResponseEntity<>(userToReturnDTO, HttpStatus.OK);
+        UserResponseDTO userResponseDTO = toUserResponseDTO(userUpdated);
+        return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<UserDTO> patchUser(@PathVariable Long id, @Validated @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserResponseDTO> patchUser(@PathVariable Long id,
+            @Validated @RequestBody UserCreationRequestDTO userCreationRequestDTO) {
         User user = IUserService.getUserById(id);
         if (user == null)
             return ResponseEntity.notFound().build();
 
-        if (userDTO.getName() != null)
-            user.setName(userDTO.getName());
-        if (userDTO.getEmail() != null)
-            user.setEmail(userDTO.getEmail());
+        if (userCreationRequestDTO.getName() != null)
+            user.setName(userCreationRequestDTO.getName());
+        if (userCreationRequestDTO.getEmail() != null)
+            user.setEmail(userCreationRequestDTO.getEmail());
 
-        User updated = IUserService.updateUser(id, user);
-        return ResponseEntity.ok(toUserDTO(updated));
+        User userUpdated = IUserService.updateUser(id, user);
+
+        return ResponseEntity.ok(toUserResponseDTO(userUpdated));
     }
 
     @DeleteMapping("/{id}")
@@ -107,7 +112,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/changeStatus")
-    public ResponseEntity<UserDTO> changeUserStatus(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDTO> changeUserStatus(@PathVariable Long id) {
         User user = IUserService.getUserById(id);
 
         if (user.getRole() != RolesEnum.ADMIN) {
@@ -116,18 +121,18 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        UserDTO updated = toUserDTO(IUserService.updateUser(id, user));
+        UserResponseDTO updatedUserResponseDTO = toUserResponseDTO(IUserService.updateUser(id, user));
 
-        return ResponseEntity.ok(updated);
+        return ResponseEntity.ok(updatedUserResponseDTO);
     }
 
     // UTILITÁRIOS
-    private UserDTO toUserDTO(User user) {
-        UserDTO dto = new UserDTO();
-        dto.setId(user.getId());
-        dto.setName(user.getName());
-        dto.setEmail(user.getEmail());
-        dto.setActive(user.isActive());
-        return dto;
+    private UserResponseDTO toUserResponseDTO(User user) {
+        UserResponseDTO userResponseSTO = new UserResponseDTO();
+        userResponseSTO.setId(user.getId());
+        userResponseSTO.setName(user.getName());
+        userResponseSTO.setEmail(user.getEmail());
+        userResponseSTO.setActive(user.isActive());
+        return userResponseSTO;
     }
 }
