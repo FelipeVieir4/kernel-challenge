@@ -2,7 +2,7 @@ package com.br.kchallenge.crud.service;
 
 import com.br.kchallenge.crud.model.User; 
 import java.util.List;
-import java.util.Optional;
+
 
 public interface IUserService {
     User createUser(User user); 

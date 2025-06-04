@@ -88,9 +88,9 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> patchUser(@PathVariable Long id,
             @Validated @RequestBody UserCreationRequestDTO userCreationRequestDTO) {
         User user = IUserService.getUserById(id);
-        if (user == null)
-            return ResponseEntity.notFound().build();
-
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         if (userCreationRequestDTO.getName() != null)
             user.setName(userCreationRequestDTO.getName());
         if (userCreationRequestDTO.getEmail() != null)
@@ -98,7 +98,7 @@ public class UserController {
 
         User userUpdated = IUserService.updateUser(id, user);
 
-        return ResponseEntity.ok(toUserResponseDTO(userUpdated));
+        return new ResponseEntity<>(toUserResponseDTO(userUpdated),HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -118,12 +118,12 @@ public class UserController {
         if (user.getRole() != RolesEnum.ADMIN) {
             user.setActive(!user.isActive());
         } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
         UserResponseDTO updatedUserResponseDTO = toUserResponseDTO(IUserService.updateUser(id, user));
 
-        return ResponseEntity.ok(updatedUserResponseDTO);
+        return new ResponseEntity<>(updatedUserResponseDTO, HttpStatus.OK);
     }
 
     // UTILITÁRIOS

@@ -1,6 +1,6 @@
 package com.br.kchallenge.crud.service;
 
-import com.br.kchallenge.crud.dto.UserDTO;
+
 import com.br.kchallenge.crud.model.User;
 import com.br.kchallenge.crud.repository.IUserRepository;
 
@@ -25,7 +25,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User getUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new NoSuchElementException("User not found with id: " + id));
     }
 
     @Override
@@ -38,10 +38,9 @@ public class UserServiceImpl implements IUserService {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("User not found with id: " + id));
 
-        // Update the fields of the existing user with the new values
+
         existingUser.setName(user.getName());
         existingUser.setEmail(user.getEmail());
-        // existingUser.setPassword(user.getPassword()); // Consider hashing the password before saving
         existingUser.setActive(user.isActive());
         existingUser.setRole(user.getRole());
 
