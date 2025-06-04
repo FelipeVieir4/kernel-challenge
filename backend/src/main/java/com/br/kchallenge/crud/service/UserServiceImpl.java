@@ -5,6 +5,7 @@ import com.br.kchallenge.crud.model.User;
 import com.br.kchallenge.crud.repository.IUserRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User updateUser(Long id, User user) {
         User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new NoSuchElementException("User not found with id: " + id));
 
         // Update the fields of the existing user with the new values
         existingUser.setName(user.getName());
@@ -50,7 +51,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new RuntimeException("User not found with id: " + id);
+            throw new NoSuchElementException("User not found with id: " + id);
         }
         userRepository.deleteById(id);
     }
