@@ -7,6 +7,7 @@ import com.br.kchallenge.crud.repository.IUserRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -57,7 +58,7 @@ public class UserServiceImpl implements IUserService {
 
 
     @Override
-    public User findByEmail(String email) {
+    public UserDetails findByEmail(String email) {
 
         try {
             return userRepository.findByEmail(email);

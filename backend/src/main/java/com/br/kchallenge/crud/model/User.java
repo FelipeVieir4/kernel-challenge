@@ -1,5 +1,12 @@
 package com.br.kchallenge.crud.model;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.br.kchallenge.crud.enums.RolesEnum;
 
 import jakarta.persistence.*;
@@ -12,14 +19,13 @@ import lombok.AllArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User implements UserDetails {
 
     @Id
     @Column(unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    
     @Column(nullable = false)
     private String name;
 
@@ -36,10 +42,21 @@ public class User {
     @Column(nullable = false)
     private boolean isActive = true;
 
-    // public User orElse(Object object) {
-    //     if (object instanceof User user) {
-    //         return user;
-    //     }
-    //     return null;
-    // }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (this.role == RolesEnum.ADMIN) {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_USER"));
+        } else {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_USER"));
+        }
+    }
+
+    @Override
+    public String getUsername() {
+        return this.getEmail(); // login do usuário
+    }
+
 }

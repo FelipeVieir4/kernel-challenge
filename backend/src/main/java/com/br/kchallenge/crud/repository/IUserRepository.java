@@ -1,21 +1,22 @@
 package com.br.kchallenge.crud.repository;
 
 import com.br.kchallenge.crud.model.User;
-import org.springframework.data.jpa.repository.JpaRepository; 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository; 
 
-@Repository // Indicates that this interface is a Spring Data repository
+@Repository
 public interface IUserRepository extends JpaRepository<User, Long> {
     // This interface will inherit methods for CRUD operations on User entities
     // The first parameter is the entity type (User), and the second is the type of
     // the primary key (Long)
 
-    User findByEmail(String email); // Custom query method to find a user by email
+    UserDetails findByEmail(String email); // Custom query method to find a user by email
 
 }
 
 /*
- * PORQUE UMA INTERFACE UserRepository extends JpaRepository<User, Long> E NÃO
+ * PORQUE UMA INTERFACE? UserRepository extends JpaRepository<User, Long> E NÃO
  * public class UserRepository implements JpaRepository<User, Long>?
  *
  * (public class UserRepository implements JpaRepository) faria todo o sentido

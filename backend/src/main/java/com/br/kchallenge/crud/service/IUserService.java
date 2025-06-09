@@ -3,6 +3,8 @@ package com.br.kchallenge.crud.service;
 import com.br.kchallenge.crud.model.User; 
 import java.util.List;
 
+import org.springframework.security.core.userdetails.UserDetails;
+
 
 public interface IUserService {
     User createUser(User user); 
@@ -15,5 +17,5 @@ public interface IUserService {
 
     void deleteUser(Long id); 
 
-    User findByEmail(String email);
+    UserDetails findByEmail(String email);
 }

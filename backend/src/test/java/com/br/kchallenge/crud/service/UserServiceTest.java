@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.br.kchallenge.crud.enums.RolesEnum;
 import com.br.kchallenge.crud.model.User;
 
-import org.aspectj.lang.annotation.Before;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
