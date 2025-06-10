@@ -61,6 +61,8 @@ public class AuthenticationController {
         newUser.setEmail(authenticationDTO.getEmail());
         newUser.setPassword(new BCryptPasswordEncoder().encode(authenticationDTO.getPassword()));
         User createdUser = userService.createUser(newUser);
+
+
         UserResponseDTO userResponseDTO = UserUtils.toUserResponseDTO(createdUser);
 
         return new ResponseEntity<>(userResponseDTO, HttpStatus.CREATED);
